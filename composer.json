@@ -1,0 +1,22 @@
+{
+  "name": "md-tech/complex-search",
+  "description": "laravel complex search",
+  "type": "library",
+  "authors": [
+        {
+            "name": "Md-Tech",
+            "email": "h2odumpling@vip.qq.com",
+            "homepage": "https://miaodaokeji.com/",
+            "role": "Developer"
+        }
+    ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=5.6.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "MdTech\\ComplexSearch\\": "src/"
+    }
+  }
+}
