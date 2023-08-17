@@ -2,6 +2,7 @@
 
 namespace MdTech\ComplexSearch;
 
+use App\Jobs\Export\AdminMemberExportJob;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -135,27 +136,47 @@ class ComplexSearch
 
     protected function execExport()
     {
-        $data['uri'] = $_SERVER['DOCUMENT_URI'];
-        $data['controller'] = \Route::current()->getAction('controller');
-        $data['params'] = $this->input('params', []);
-        $data['fields'] = $this->input('fields', []);
-        $data['extras'] = $this->input('extras', []);
-        if ($groupBy = $this->input('groupBy')) {
-            $data['groupBy'] = $groupBy;
-        }
-        if ($orderBy = $this->input('orderBy')) {
-            $data['orderBy'] = $orderBy;
-        }
-        $data = json_encode($data);
+        $ids = $this->query()->select('id')->get()->pluck('id')->toArray();
+
         $params = [
-            'code' => strtoupper(md5($data)),
-            'expires_in' => time() + $this->exportLinkTime * 60,
+            'code' => strtoupper(md5(time() . self::class)),
+            'expires_at' => time(),
             'nonce_str' => str_random(16),
         ];
         $params['sign'] = md5(http_build_query($params) . '&key=' . env('APP_KEY'));
-        \Cache::put('EXPORT:' . $params['code'], $data, $this->exportLinkTime);
+
+        $this->doExport($params, $ids);
+
         return http_build_query($params);
     }
+
+    protected function doExport($params, $data){
+        \Cache::put('EXPORT:' . $params['code'], $data, $this->exportLinkTime);
+    }
+
+//    protected function execExport()
+//    {
+//        $data['uri'] = $_SERVER['DOCUMENT_URI'];
+//        $data['controller'] = \Route::current()->getAction('controller');
+//        $data['params'] = $this->input('params', []);
+//        $data['fields'] = $this->input('fields', []);
+//        $data['extras'] = $this->input('extras', []);
+//        if ($groupBy = $this->input('groupBy')) {
+//            $data['groupBy'] = $groupBy;
+//        }
+//        if ($orderBy = $this->input('orderBy')) {
+//            $data['orderBy'] = $orderBy;
+//        }
+//        $data = json_encode($data);
+//        $params = [
+//            'code' => strtoupper(md5($data)),
+//            'expires_in' => time() + $this->exportLinkTime * 60,
+//            'nonce_str' => str_random(16),
+//        ];
+//        $params['sign'] = md5(http_build_query($params) . '&key=' . env('APP_KEY'));
+//        \Cache::put('EXPORT:' . $params['code'], $data, $this->exportLinkTime);
+//        return http_build_query($params);
+//    }
 
     public function query()
     {

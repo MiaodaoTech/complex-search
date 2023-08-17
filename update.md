@@ -1,5 +1,7 @@
 ## 升级
 
+修改excel导出方法
+---
 适配lumen避免lumen的laravel版本错误导致的问题
 ---
 action 变化
