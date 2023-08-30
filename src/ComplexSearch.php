@@ -47,7 +47,7 @@ class ComplexSearch
 
     protected $filterPreg = array();
 
-    protected $exportLinkTime = 120;
+    protected $exportLinkTime = 1800;
 
     /**
      * @var RelationNode
@@ -140,8 +140,10 @@ class ComplexSearch
 
         $params = [
             'code' => strtoupper(md5(time() . self::class)),
-            'expires_at' => time(),
+            'expires_in' => time() . $this->exportLinkTime,
             'nonce_str' => str_random(16),
+            'type' => 'export',
+            'ext' => 'csv',
         ];
         $params['sign'] = md5(http_build_query($params) . '&key=' . env('APP_KEY'));
 
@@ -611,7 +613,7 @@ class ComplexSearch
             $fullname = $field['table'] . '.' . $field['_value'];
         }
         if ($rename && $field['_value'] !== '*' && $field['_value'] !== $field['rename']) {
-            return \DB::raw($fullname . ' as ' . $field['rename']);
+            return \DB::raw(env('DB_PREFIX') . $fullname . ' as ' . $field['rename']);
         }
         return $fullname;
     }
