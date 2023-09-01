@@ -936,4 +936,8 @@ class ComplexSearch
 
         return app()->version();
     }
+
+    public function getHeaders(){
+        return $this->headers;
+    }
 }
