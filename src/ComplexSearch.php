@@ -68,7 +68,8 @@ class ComplexSearch
         'boolean' => ['=', '<>'],
         'only' => ['=', '<>', 'in'],
         'json' => ['like', 'not like'],
-        'date' => ['=', '<>', '>', '>=', '<', '<=', 'in']
+        'date' => ['=', '<>', '>', '>=', '<', '<=', 'in'],
+        'datetime' => ['=', '<>', '>', '>=', '<', '<=', 'in']
     ];
 
     private $fun = ['add', 'mul', 'sub', 'div', 'sum', 'max', 'min', 'count', 'avg', 'if', 'date_format', 'round', 'cast', 'concat', 'abs', 'group_concat'];
